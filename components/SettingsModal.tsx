@@ -26,6 +26,13 @@ type Props = {
   speak: (text: string, rate?: number, pitch?: number, isWinner?: boolean) => void;
   showWinStackOverlay: boolean;
   setShowWinStackOverlay: (v: boolean) => void;
+  ytApiKey: string;
+  setYtApiKey: (v: string) => void;
+  ytVideoId: string;
+  setYtVideoId: (v: string) => void;
+  ytConnected: boolean;
+  onYtConnect: () => void;
+  onYtDisconnect: () => void;
 };
 
 export default function SettingsModal({
@@ -36,6 +43,8 @@ export default function SettingsModal({
   friction, setFriction, wallBoost, setWallBoost,
   onFullRoyale, speak,
   showWinStackOverlay, setShowWinStackOverlay,
+  ytApiKey, setYtApiKey, ytVideoId, setYtVideoId,
+  ytConnected, onYtConnect, onYtDisconnect,
 }: Props) {
   if (!open) return null;
 
@@ -121,6 +130,47 @@ export default function SettingsModal({
               <input type="range" min={s.min} max={s.max} step={s.step} value={s.value} onChange={(e) => s.set(parseFloat(e.target.value))} className="w-full accent-cyan-500 h-1" />
             </div>
           ))}
+        </section>
+
+        {/* YouTube Live Chat */}
+        <section className="mt-5 rounded-[14px] bg-white/[0.03] border border-white/[0.06] p-3">
+          <h3 className="mono text-[11px] text-white/60 font-bold mb-3">📺 YOUTUBE LIVE CHAT</h3>
+          <div className="space-y-2">
+            <div>
+              <label className="mono text-[10px] text-white/40 mb-1 block">API KEY</label>
+              <input
+                type="password"
+                value={ytApiKey}
+                onChange={(e) => setYtApiKey(e.target.value)}
+                placeholder="AIza..."
+                className="w-full h-[32px] px-2 rounded-[8px] bg-black/40 border border-white/10 mono text-[11px] text-white placeholder:text-white/20 outline-none focus:border-violet-500/50"
+              />
+            </div>
+            <div>
+              <label className="mono text-[10px] text-white/40 mb-1 block">VIDEO ID</label>
+              <input
+                type="text"
+                value={ytVideoId}
+                onChange={(e) => setYtVideoId(e.target.value)}
+                placeholder="dQw4w9WgXcQ"
+                className="w-full h-[32px] px-2 rounded-[8px] bg-black/40 border border-white/10 mono text-[11px] text-white placeholder:text-white/20 outline-none focus:border-violet-500/50"
+              />
+            </div>
+            <button
+              onClick={ytConnected ? onYtDisconnect : onYtConnect}
+              disabled={!ytApiKey || !ytVideoId}
+              className={`w-full h-[36px] rounded-[10px] mono text-[11px] font-bold transition-all disabled:opacity-30 ${
+                ytConnected
+                  ? 'bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30'
+                  : 'bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30'
+              }`}
+            >
+              {ytConnected ? '● DISCONNECT' : '▶ CONNECT'}
+            </button>
+            {ytConnected && (
+              <div className="mono text-[9px] text-emerald-300/60 text-center">Connected — polling chat every 6s</div>
+            )}
+          </div>
         </section>
       </div>
     </div>

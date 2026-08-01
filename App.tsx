@@ -3,6 +3,8 @@ import SettingsModal from "./components/SettingsModal";
 import WinStack from "./components/WinStack";
 import WinnerOverlay from "./components/WinnerOverlay";
 import EliminatedStack from "./components/EliminatedStack";
+import BoostTicker from "./components/BoostTicker";
+import { useLiveChat } from "./hooks/useLiveChat";
 
 type Country = { iso2: string; code: string; name: string; shortName?: string };
 // 195 UN member + observers (193 + Palestine PS + Vatican VA) + Ivory Coast fix = 195 total
@@ -290,6 +292,37 @@ export default function App() {
   useEffect(() => { elasticityRef.current = elasticity; }, [elasticity]);
   useEffect(() => { frictionRef.current = friction; }, [friction]);
   useEffect(() => { wallBoostRef.current = wallBoost; }, [wallBoost]);
+
+  // YouTube Live Chat
+  const liveChat = useLiveChat(COUNTRIES);
+  const [ctaVisible, setCtaVisible] = useState(false);
+
+  // Boost logic: when chat mentions a country, speed up that ball
+  useEffect(() => {
+    if (liveChat.boostEvents.length === 0) return;
+    const latest = liveChat.boostEvents[liveChat.boostEvents.length - 1];
+    const balls = ballsRef.current;
+    for (const b of balls) {
+      if (b.alive && b.country.iso2 === latest.country.iso2) {
+        // Boost: increase speed by 40%
+        const speed = Math.hypot(b.vx, b.vy);
+        const boost = Math.max(speed * 1.4, 12);
+        const angle = Math.atan2(b.vy, b.vx);
+        b.vx = Math.cos(angle) * boost;
+        b.vy = Math.sin(angle) * boost;
+        break;
+      }
+    }
+  }, [liveChat.boostEvents.length]);
+
+  // CTA message every 30 seconds when connected
+  useEffect(() => {
+    if (!liveChat.connected) { setCtaVisible(false); return; }
+    const show = () => { setCtaVisible(true); setTimeout(() => setCtaVisible(false), 4000); };
+    show();
+    const interval = setInterval(show, 30000);
+    return () => clearInterval(interval);
+  }, [liveChat.connected]);
 
   // TTS voice loading
   useEffect(() => {
@@ -1074,6 +1107,16 @@ export default function App() {
       {/* Win Stack overlay */}
       {showWinStackOverlay && <WinStack winStack={winStack} />}
 
+      {/* Boost Ticker - chat events */}
+      <BoostTicker events={liveChat.boostEvents} />
+
+      {/* CTA message */}
+      {ctaVisible && liveChat.connected && (
+        <div className="absolute bottom-[120px] left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 border border-violet-400/30 backdrop-blur-md animate-[slideDown_0.3s_ease-out]">
+          <span className="mono text-[12px] font-bold text-white">💬 Chat your country to BOOST it!</span>
+        </div>
+      )}
+
       {/* Header */}
       <header className="w-full px-5 pt-4 pb-2 flex items-center justify-between shrink-0 z-10">
         <div className="flex items-center gap-2.5">
@@ -1188,6 +1231,13 @@ export default function App() {
         speak={speak}
         showWinStackOverlay={showWinStackOverlay}
         setShowWinStackOverlay={setShowWinStackOverlay}
+        ytApiKey={liveChat.apiKey}
+        setYtApiKey={liveChat.setApiKey}
+        ytVideoId={liveChat.videoId}
+        setYtVideoId={liveChat.setVideoId}
+        ytConnected={liveChat.connected}
+        onYtConnect={liveChat.connect}
+        onYtDisconnect={liveChat.disconnect}
       />
     </>
   );
