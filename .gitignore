@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.cache/
+gh_status.txt
