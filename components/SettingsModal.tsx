@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 
 type Props = {
   open: boolean;
@@ -48,8 +49,8 @@ export default function SettingsModal({
 }: Props) {
   if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center" onClick={onClose}>
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div
         className="relative w-[90%] max-w-[460px] max-h-[80vh] bg-[#12121e] border border-white/10 rounded-[24px] p-5 overflow-y-auto shadow-2xl"
@@ -173,6 +174,7 @@ export default function SettingsModal({
           </div>
         </section>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
