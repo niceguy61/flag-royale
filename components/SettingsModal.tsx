@@ -24,6 +24,8 @@ type Props = {
   setWallBoost: (v: number) => void;
   onFullRoyale: () => void;
   speak: (text: string, rate?: number, pitch?: number, isWinner?: boolean) => void;
+  showWinStackOverlay: boolean;
+  setShowWinStackOverlay: (v: boolean) => void;
 };
 
 export default function SettingsModal({
@@ -33,6 +35,7 @@ export default function SettingsModal({
   speedMult, setSpeedMult, elasticity, setElasticity,
   friction, setFriction, wallBoost, setWallBoost,
   onFullRoyale, speak,
+  showWinStackOverlay, setShowWinStackOverlay,
 }: Props) {
   if (!open) return null;
 
@@ -61,6 +64,14 @@ export default function SettingsModal({
           <button onClick={onFullRoyale} disabled={isPlaying} className="w-full mt-2 h-[38px] rounded-[10px] bg-gradient-to-r from-cyan-500/20 via-violet-500/20 to-fuchsia-500/20 border border-violet-400/20 mono text-[11px] font-bold hover:from-cyan-500/30 hover:via-violet-500/30 hover:to-fuchsia-500/30 transition-all disabled:opacity-40">
             🌍 FULL ROYALE (195)
           </button>
+        </section>
+
+        {/* Display */}
+        <section className="mb-5">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={showWinStackOverlay} onChange={(e) => setShowWinStackOverlay(e.target.checked)} className="accent-violet-500 w-3.5 h-3.5" />
+            <span className="mono text-[11px] text-white/70">Show Win Stack overlay (top-left)</span>
+          </label>
         </section>
 
         {/* TTS */}

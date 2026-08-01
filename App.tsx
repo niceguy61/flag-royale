@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import SettingsModal from "./components/SettingsModal";
 import WinStack from "./components/WinStack";
 import WinnerOverlay from "./components/WinnerOverlay";
-import Ticker from "./components/Ticker";
+import EliminatedStack from "./components/EliminatedStack";
 
 type Country = { iso2: string; code: string; name: string; shortName?: string };
 // 195 UN member + observers (193 + Palestine PS + Vatican VA) + Ivory Coast fix = 195 total
@@ -257,6 +257,7 @@ export default function App() {
  const [loadedCount, setLoadedCount] = useState(0);
  const [shuffleFlash, setShuffleFlash] = useState(false);
   const [showGear, setShowGear] = useState(false);
+  const [showWinStackOverlay, setShowWinStackOverlay] = useState(true);
   const [speedMult, setSpeedMult] = useState(1);
   const [elasticity, setElasticity] = useState(1);
   const [friction, setFriction] = useState(1);
@@ -876,8 +877,7 @@ export default function App() {
     // elimination toast + ticker (max 1 toast, 2.5s)
     if (newlyEliminated.length > 0) {
       setElimTicker((prev) => {
-        const combined = [...prev, ...newlyEliminated];
-        return combined.slice(-15);
+        return [...prev, ...newlyEliminated];
       });
       const last = newlyEliminated[newlyEliminated.length - 1];
       setToast(last);
@@ -1043,7 +1043,7 @@ export default function App() {
 
   return (
     <>
-    <div className="w-full h-screen bg-[#0a0a12] text-white flex flex-col overflow-hidden relative mx-auto" style={{maxWidth:'1080px',aspectRatio:'9/16'}}>
+    <div className="w-screen h-screen bg-[#0a0a12] text-white flex flex-col overflow-hidden relative">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
         *{font-family:'Space Grotesk',system-ui,sans-serif;}
@@ -1068,7 +1068,7 @@ export default function App() {
       )}
 
       {/* Win Stack overlay */}
-      <WinStack winStack={winStack} />
+      {showWinStackOverlay && <WinStack winStack={winStack} />}
 
       {/* Header */}
       <header className="w-full px-5 pt-4 pb-2 flex items-center justify-between shrink-0 z-10">
@@ -1138,9 +1138,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* Ticker */}
-      <div className="w-full px-5 shrink-0">
-        <Ticker elimTicker={elimTicker} />
+      {/* Eliminated flags stack */}
+      <div className="w-full px-5">
+        <EliminatedStack elimTicker={elimTicker} totalCount={ballCount} />
       </div>
 
 
@@ -1191,6 +1191,8 @@ export default function App() {
         setWallBoost={setWallBoost}
         onFullRoyale={handleFullRoyale}
         speak={speak}
+        showWinStackOverlay={showWinStackOverlay}
+        setShowWinStackOverlay={setShowWinStackOverlay}
       />
     </>
   );
