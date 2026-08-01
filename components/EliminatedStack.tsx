@@ -8,8 +8,8 @@ type Props = {
 };
 
 export default function EliminatedStack({ elimTicker, totalCount }: Props) {
-  const flagW = 26;
-  const flagH = 18;
+  const flagW = 39;
+  const flagH = 27;
   const gap = 2;
 
   return (
