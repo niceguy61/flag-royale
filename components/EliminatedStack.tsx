@@ -30,7 +30,7 @@ export default function EliminatedStack({ elimTicker, totalCount }: Props) {
             width: '100%',
           }}
         >
-          {elimTicker.map((c, i) => (
+          {elimTicker.slice().reverse().map((c, i) => (
             <div
               key={`${c.code}-${i}`}
               className="rounded-[3px] overflow-hidden border border-white/10"

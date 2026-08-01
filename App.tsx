@@ -1090,16 +1090,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Progress bar */}
-      <div className="w-full px-5 shrink-0">
-        <div className="rounded-full bg-white/[0.06] border border-white/[0.08] px-3 py-2 flex items-center gap-3">
-          <span className="mono text-[11px] font-bold text-white/70 shrink-0">{remaining}/{ballCount}</span>
-          <div className="flex-1 h-[8px] rounded-full bg-white/[0.08] overflow-hidden relative">
-            <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-500 ease-out" style={{width:`${remainPct}%`,background:'linear-gradient(90deg,#22d3ee 0%,#a78bfa 50%,#f472b6 100%)',boxShadow:'0 0 12px rgba(168,85,247,0.5)'}} />
-          </div>
-          <span className="mono text-[10px] text-white/40 shrink-0">{eliminated}💀</span>
-        </div>
-      </div>
+      {/* Progress bar removed - cleaner for shorts */}
 
 
       {/* Arena canvas - fills remaining vertical space */}
