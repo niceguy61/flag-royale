@@ -15,7 +15,7 @@ export default function EliminatedStack({ elimTicker, totalCount }: Props) {
   if (elimTicker.length === 0) return null;
 
   return (
-    <div className="w-full" style={{ maxHeight: '140px', overflowY: 'auto' }}>
+    <div className="w-full hide-scrollbar" style={{ maxHeight: '140px', overflowY: 'auto', scrollbarWidth: 'none' }}>
       <div
         style={{
           display: 'grid',

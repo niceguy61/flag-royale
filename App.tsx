@@ -1054,6 +1054,8 @@ export default function App() {
         @keyframes pop{0%{transform:scale(0.3) rotate(-10deg)}100%{transform:scale(1) rotate(0deg)}}
         @keyframes float{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
         @keyframes winnerScale{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+        .hide-scrollbar::-webkit-scrollbar{display:none;}
+        .hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
       `}</style>
 
       {/* Toast */}
