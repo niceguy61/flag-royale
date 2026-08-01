@@ -1067,7 +1067,7 @@ export default function App() {
   const remainPct = ballCount > 0 ? (remaining / ballCount) * 100 : 0;
 
   return (
-    <div className="w-screen h-screen bg-[#0a0a12] text-white flex flex-col overflow-hidden relative">
+    <div className={`w-screen h-screen bg-[#0a0a12] text-white flex flex-col relative ${showGear ? 'overflow-y-auto' : 'overflow-hidden'}`}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
         *{font-family:'Space Grotesk',system-ui,sans-serif;}
