@@ -259,7 +259,7 @@ export default function App() {
  const [loadedCount, setLoadedCount] = useState(0);
  const [shuffleFlash, setShuffleFlash] = useState(false);
   const [showGear, setShowGear] = useState(false);
-  const [showWinStackOverlay, setShowWinStackOverlay] = useState(true);
+  const [showWinStackOverlay, setShowWinStackOverlay] = useState(false);
   const [speedMult, setSpeedMult] = useState(1);
   const [elasticity, setElasticity] = useState(1);
   const [friction, setFriction] = useState(1);
@@ -1067,7 +1067,6 @@ export default function App() {
   const remainPct = ballCount > 0 ? (remaining / ballCount) * 100 : 0;
 
   return (
-    <>
     <div className="w-screen h-screen bg-[#0a0a12] text-white flex flex-col overflow-hidden relative">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
@@ -1197,9 +1196,8 @@ export default function App() {
         </button>
       </div>
 
-      {/* Settings Modal - outside overflow container */}
-    </div>
-    <SettingsModal
+      {/* Settings panel - bottom slide */}
+      <SettingsModal
         open={showGear}
         onClose={() => setShowGear(false)}
         ballCount={ballCount}
@@ -1233,6 +1231,7 @@ export default function App() {
         onYtConnect={liveChat.connect}
         onYtDisconnect={liveChat.disconnect}
       />
-    </>
+    </div>
   );
+}
 }

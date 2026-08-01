@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 type Props = {
   open: boolean;
@@ -49,132 +48,107 @@ export default function SettingsModal({
 }: Props) {
   if (!open) return null;
 
-  return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <div
-        className="relative w-[90%] max-w-[460px] max-h-[80vh] bg-[#12121e] border border-white/10 rounded-[24px] p-5 overflow-y-auto shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="mono text-[14px] font-bold tracking-wide">⚙️ SETTINGS</h2>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[16px] transition-all">✕</button>
+  return (
+    <div className="absolute bottom-0 left-0 right-0 z-[9999] bg-[#12121e] border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.8)] rounded-t-[20px] max-h-[70vh] overflow-y-auto hide-scrollbar" onClick={(e) => e.stopPropagation()}>
+      {/* Handle bar */}
+      <div className="sticky top-0 bg-[#12121e] pt-3 pb-2 px-5 flex items-center justify-between z-10 border-b border-white/5">
+        <h2 className="mono text-[13px] font-bold tracking-wide">⚙️ SETTINGS</h2>
+        <button onClick={onClose} className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[14px] transition-all">✕</button>
+      </div>
+
+      <div className="p-4 space-y-4">
+        {/* Flag Count + Full Royale */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <label className="mono text-[10px] text-white/50">FLAGS</label>
+              <span className="mono text-[11px] font-bold text-violet-300">{ballCount}</span>
+            </div>
+            <input type="range" min={20} max={195} step={5} value={ballCount} onChange={(e) => onBallCountChange(Number(e.target.value))} className="w-full accent-violet-500 h-1" disabled={isPlaying} />
+          </div>
+          <button onClick={onFullRoyale} disabled={isPlaying} className="h-[34px] px-3 rounded-[8px] bg-violet-500/20 border border-violet-400/20 mono text-[10px] font-bold text-violet-200 hover:bg-violet-500/30 transition-all disabled:opacity-30 shrink-0">195</button>
         </div>
 
-        {/* Flag Count */}
-        <section className="mb-5">
-          <div className="flex items-center justify-between mb-2">
-            <label className="mono text-[11px] text-white/60">FLAG COUNT</label>
-            <span className="mono text-[12px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-200">{ballCount}</span>
-          </div>
-          <input type="range" min={20} max={195} step={5} value={ballCount} onChange={(e) => onBallCountChange(Number(e.target.value))} className="w-full accent-violet-500 h-1" disabled={isPlaying} />
-          <div className="flex justify-between mono text-[9px] text-white/25 mt-1">
-            <span>20</span><span>195 FULL</span>
-          </div>
-          <button onClick={onFullRoyale} disabled={isPlaying} className="w-full mt-2 h-[38px] rounded-[10px] bg-gradient-to-r from-cyan-500/20 via-violet-500/20 to-fuchsia-500/20 border border-violet-400/20 mono text-[11px] font-bold hover:from-cyan-500/30 hover:via-violet-500/30 hover:to-fuchsia-500/30 transition-all disabled:opacity-40">
-            🌍 FULL ROYALE (195)
-          </button>
-        </section>
-
-        {/* Display */}
-        <section className="mb-5">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={showWinStackOverlay} onChange={(e) => setShowWinStackOverlay(e.target.checked)} className="accent-violet-500 w-3.5 h-3.5" />
-            <span className="mono text-[11px] text-white/70">Show Win Stack overlay (top-left)</span>
+        {/* Display + TTS row */}
+        <div className="flex gap-3">
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" checked={showWinStackOverlay} onChange={(e) => setShowWinStackOverlay(e.target.checked)} className="accent-violet-500 w-3 h-3" />
+            <span className="mono text-[10px] text-white/60">Win Stack</span>
           </label>
-        </section>
-
-        {/* TTS */}
-        <section className="mb-5 rounded-[14px] bg-white/[0.03] border border-white/[0.06] p-3">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="mono text-[11px] text-white/60 font-bold">🔊 TTS</h3>
-            <button
-              onClick={() => setTtsEnabled(!ttsEnabled)}
-              className={`mono text-[10px] px-3 py-1 rounded-full border transition-all ${ttsEnabled ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300' : 'bg-white/5 border-white/10 text-white/30'}`}
-            >
-              {ttsEnabled ? 'ON' : 'OFF'}
-            </button>
-          </div>
-          <label className="flex items-center gap-2 cursor-pointer mb-2">
-            <input type="checkbox" checked={announceWinnerOnly} onChange={(e) => setAnnounceWinnerOnly(e.target.checked)} className="accent-violet-500 w-3.5 h-3.5" />
-            <span className="mono text-[11px] text-white/70">Winner only</span>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" checked={ttsEnabled} onChange={(e) => setTtsEnabled(e.target.checked)} className="accent-emerald-500 w-3 h-3" />
+            <span className="mono text-[10px] text-white/60">TTS</span>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer mb-3">
-            <input type="checkbox" checked={announceElim} onChange={(e) => setAnnounceElim(e.target.checked)} className="accent-amber-500 w-3.5 h-3.5" />
-            <span className="mono text-[11px] text-white/60">Every elimination (noisy)</span>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" checked={announceWinnerOnly} onChange={(e) => setAnnounceWinnerOnly(e.target.checked)} className="accent-violet-500 w-3 h-3" />
+            <span className="mono text-[10px] text-white/60">Winner only</span>
           </label>
-          <div className="flex items-center justify-between mb-1">
-            <span className="mono text-[10px] text-white/40">VOLUME</span>
-            <span className="mono text-[10px] text-white/60">{Math.round(ttsVolume * 100)}%</span>
-          </div>
-          <input type="range" min={0} max={1} step={0.05} value={ttsVolume} onChange={(e) => setTtsVolume(parseFloat(e.target.value))} className="w-full accent-violet-500 h-1" />
-          <div className="flex gap-2 mt-3">
-            <button onClick={() => speak('Brazil won!', 0.9, 1.15, true)} className="flex-1 h-[32px] rounded-[8px] bg-white/[0.07] hover:bg-white/[0.12] border border-white/10 mono text-[10px] font-bold transition-all">Test TTS</button>
-            <button onClick={() => { try { window.speechSynthesis.cancel(); } catch {} }} className="flex-1 h-[32px] rounded-[8px] bg-red-500/10 hover:bg-red-500/15 border border-red-500/20 mono text-[10px] font-bold text-red-300 transition-all">Stop</button>
-          </div>
-        </section>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" checked={announceElim} onChange={(e) => setAnnounceElim(e.target.checked)} className="accent-amber-500 w-3 h-3" />
+            <span className="mono text-[10px] text-white/60">Elim TTS</span>
+          </label>
+        </div>
 
-        {/* Physics */}
-        <section className="rounded-[14px] bg-white/[0.03] border border-white/[0.06] p-3">
-          <h3 className="mono text-[11px] text-white/60 font-bold mb-3">⚡ PHYSICS</h3>
+        {/* TTS Volume */}
+        {ttsEnabled && (
+          <div className="flex items-center gap-2">
+            <span className="mono text-[9px] text-white/40">VOL</span>
+            <input type="range" min={0} max={1} step={0.05} value={ttsVolume} onChange={(e) => setTtsVolume(parseFloat(e.target.value))} className="flex-1 accent-violet-500 h-1" />
+            <span className="mono text-[9px] text-white/50">{Math.round(ttsVolume * 100)}%</span>
+            <button onClick={() => speak('Brazil won!', 0.9, 1.15, true)} className="h-[24px] px-2 rounded bg-white/[0.07] hover:bg-white/[0.12] border border-white/10 mono text-[9px] font-bold transition-all">Test</button>
+          </div>
+        )}
+
+        {/* Physics - compact */}
+        <div className="grid grid-cols-4 gap-2">
           {[
-            { label: 'SPEED', value: speedMult, set: setSpeedMult, min: 0.5, max: 3, step: 0.1 },
-            { label: 'BOUNCE', value: elasticity, set: setElasticity, min: 0.5, max: 2, step: 0.1 },
-            { label: 'FRICTION', value: friction, set: setFriction, min: 0.8, max: 1.2, step: 0.01 },
-            { label: 'WALL BOOST', value: wallBoost, set: setWallBoost, min: 1, max: 1.2, step: 0.01 },
+            { label: 'SPD', value: speedMult, set: setSpeedMult, min: 0.5, max: 3, step: 0.1 },
+            { label: 'BNC', value: elasticity, set: setElasticity, min: 0.5, max: 2, step: 0.1 },
+            { label: 'FRC', value: friction, set: setFriction, min: 0.8, max: 1.2, step: 0.01 },
+            { label: 'WB', value: wallBoost, set: setWallBoost, min: 1, max: 1.2, step: 0.01 },
           ].map((s) => (
-            <div key={s.label} className="mb-2">
+            <div key={s.label}>
               <div className="flex items-center justify-between">
-                <span className="mono text-[10px] text-white/40">{s.label}</span>
-                <span className="mono text-[10px] text-white/70">{s.value.toFixed(2)}</span>
+                <span className="mono text-[8px] text-white/30">{s.label}</span>
+                <span className="mono text-[8px] text-white/50">{s.value.toFixed(1)}</span>
               </div>
-              <input type="range" min={s.min} max={s.max} step={s.step} value={s.value} onChange={(e) => s.set(parseFloat(e.target.value))} className="w-full accent-cyan-500 h-1" />
+              <input type="range" min={s.min} max={s.max} step={s.step} value={s.value} onChange={(e) => s.set(parseFloat(e.target.value))} className="w-full accent-cyan-500 h-0.5" />
             </div>
           ))}
-        </section>
+        </div>
 
         {/* YouTube Live Chat */}
-        <section className="mt-5 rounded-[14px] bg-white/[0.03] border border-white/[0.06] p-3">
-          <h3 className="mono text-[11px] text-white/60 font-bold mb-3">📺 YOUTUBE LIVE CHAT</h3>
+        <div className="rounded-[10px] bg-white/[0.03] border border-white/[0.06] p-3">
+          <h3 className="mono text-[10px] text-white/50 font-bold mb-2">📺 YOUTUBE CHAT</h3>
           <div className="space-y-2">
-            <div>
-              <label className="mono text-[10px] text-white/40 mb-1 block">API KEY</label>
-              <input
-                type="password"
-                value={ytApiKey}
-                onChange={(e) => setYtApiKey(e.target.value)}
-                placeholder="AIza..."
-                className="w-full h-[32px] px-2 rounded-[8px] bg-black/40 border border-white/10 mono text-[11px] text-white placeholder:text-white/20 outline-none focus:border-violet-500/50"
-              />
-            </div>
-            <div>
-              <label className="mono text-[10px] text-white/40 mb-1 block">VIDEO ID</label>
-              <input
-                type="text"
-                value={ytVideoId}
-                onChange={(e) => setYtVideoId(e.target.value)}
-                placeholder="dQw4w9WgXcQ"
-                className="w-full h-[32px] px-2 rounded-[8px] bg-black/40 border border-white/10 mono text-[11px] text-white placeholder:text-white/20 outline-none focus:border-violet-500/50"
-              />
-            </div>
+            <input
+              type="password"
+              value={ytApiKey}
+              onChange={(e) => setYtApiKey(e.target.value)}
+              placeholder="API Key"
+              className="w-full h-[28px] px-2 rounded-[6px] bg-black/40 border border-white/10 mono text-[10px] text-white placeholder:text-white/20 outline-none focus:border-violet-500/50"
+            />
+            <input
+              type="text"
+              value={ytVideoId}
+              onChange={(e) => setYtVideoId(e.target.value)}
+              placeholder="Video ID"
+              className="w-full h-[28px] px-2 rounded-[6px] bg-black/40 border border-white/10 mono text-[10px] text-white placeholder:text-white/20 outline-none focus:border-violet-500/50"
+            />
             <button
               onClick={ytConnected ? onYtDisconnect : onYtConnect}
               disabled={!ytApiKey || !ytVideoId}
-              className={`w-full h-[36px] rounded-[10px] mono text-[11px] font-bold transition-all disabled:opacity-30 ${
+              className={`w-full h-[30px] rounded-[8px] mono text-[10px] font-bold transition-all disabled:opacity-30 ${
                 ytConnected
-                  ? 'bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30'
-                  : 'bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30'
+                  ? 'bg-red-500/20 border border-red-500/30 text-red-300'
+                  : 'bg-emerald-500/20 border border-emerald-500/30 text-emerald-300'
               }`}
             >
               {ytConnected ? '● DISCONNECT' : '▶ CONNECT'}
             </button>
-            {ytConnected && (
-              <div className="mono text-[9px] text-emerald-300/60 text-center">Connected — polling chat every 6s</div>
-            )}
           </div>
-        </section>
+        </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
