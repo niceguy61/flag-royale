@@ -437,6 +437,7 @@ export default function App() {
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
         osc.start(now);
         osc.stop(now + 0.2);
+        osc.onended = () => { gain.disconnect(); master.disconnect(); };
       } else {
         [0, 0.15, 0.3, 0.45].forEach((d, i) => {
           const o = ctx.createOscillator();
@@ -449,6 +450,7 @@ export default function App() {
           g.gain.exponentialRampToValueAtTime(0.0001, now + d + 0.35);
           o.start(now + d);
           o.stop(now + d + 0.4);
+          o.onended = () => { g.disconnect(); if (i === 3) master.disconnect(); };
         });
       }
     },
