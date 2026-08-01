@@ -295,7 +295,6 @@ export default function App() {
 
   // YouTube Live Chat
   const liveChat = useLiveChat(COUNTRIES);
-  const [ctaVisible, setCtaVisible] = useState(false);
 
   // Boost logic: when chat mentions a country, speed up that ball
   useEffect(() => {
@@ -314,15 +313,6 @@ export default function App() {
       }
     }
   }, [liveChat.boostEvents.length]);
-
-  // CTA message every 30 seconds when connected
-  useEffect(() => {
-    if (!liveChat.connected) { setCtaVisible(false); return; }
-    const show = () => { setCtaVisible(true); setTimeout(() => setCtaVisible(false), 4000); };
-    show();
-    const interval = setInterval(show, 30000);
-    return () => clearInterval(interval);
-  }, [liveChat.connected]);
 
   // TTS voice loading
   useEffect(() => {
@@ -1110,12 +1100,7 @@ export default function App() {
       {/* Boost Ticker - chat events */}
       <BoostTicker events={liveChat.boostEvents} />
 
-      {/* CTA message */}
-      {ctaVisible && liveChat.connected && (
-        <div className="absolute bottom-[120px] left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 border border-violet-400/30 backdrop-blur-md animate-[slideDown_0.3s_ease-out]">
-          <span className="mono text-[12px] font-bold text-white">💬 Chat your country to BOOST it!</span>
-        </div>
-      )}
+      {/* CTA - fixed banner between arena and eliminated stack */}
 
       {/* Header */}
       <header className="w-full px-5 pt-4 pb-2 flex items-center justify-between shrink-0 z-10">
@@ -1175,6 +1160,15 @@ export default function App() {
           )}
         </div>
       </div>
+
+      {/* CTA banner - fixed between arena and eliminated */}
+      {liveChat.connected && (
+        <div className="w-full px-5 py-1 shrink-0">
+          <div className="w-full py-1.5 rounded-full bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 border border-violet-400/20 text-center">
+            <span className="mono text-[11px] font-bold text-white/80">💬 Chat your country to BOOST it!</span>
+          </div>
+        </div>
+      )}
 
       {/* Eliminated flags stack */}
       <div className="w-full px-5">
